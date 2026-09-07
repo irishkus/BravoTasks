@@ -65,7 +65,7 @@ private struct TasksContentView: View {
                 )
 
                 if viewModel.dailyTasks.isEmpty {
-                    EmptyDailyTask()
+                    EmptyDailyTaskView()
                         .padding(.horizontal, 20)
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -197,12 +197,23 @@ private extension TasksContentView {
         tasks: [TaskItem]
     ) -> some View {
         LazyVStack(spacing: 12) {
-            ForEach(tasks) { task in
-                taskRow(task)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewModel.editTask(task)
-                    }
+            if tasks.count > 0 {
+                ForEach(tasks) { task in
+                    taskRow(task)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            viewModel.editTask(task)
+                        }
+                }
+            } else {
+                EmptyTodayTaskView {
+                    viewModel.createTask()
+                } onCreateDailyTask: {
+                    viewModel.createTask(
+                        repeatType: .daily
+                    )
+                }
+
             }
         }
         .padding(.horizontal, 20)

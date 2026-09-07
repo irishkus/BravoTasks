@@ -17,73 +17,75 @@ struct ProgressCardView: View {
     }
     
     var body: some View {
-            HStack {
+        HStack {
+            if numberOfTasksToday > 0 {
                 ZStack {
-                    StarPath()
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(.white)
+                    Circle()
+                        .stroke(Color(.systemGray6), lineWidth: 5)
+                        .frame(width: 64, height: 64)
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(Color.bravoBasicPurple, lineWidth: 5)
+                        .frame(width: 64, height: 64)
+                        .rotationEffect(.degrees(-90))
+                        .overlay {
+                            Text("\(Int(progress * 100))%")
+                                .font(.system(size: 16, weight: .bold, design: .rounded))
+                                .foregroundColor(.black)
+                            
+                        }
                 }
-                .frame(width: 100, height: 95)
+                .padding(.leading, 20)
                 
-                if numberOfTasksToday > 0 {
-                    VStack(alignment: .leading) {
-                        Text("Выполнено \(numberOfCompletedTasks) из \(numberOfTasksToday)")
-                            .font(.headline)
-                            .bold()
-                            .padding(.bottom, 3)
-                        Text(bravo)
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                    }
-                    
-                    Spacer()
-                    
-                    ZStack {
-                        Circle()
-                            .stroke(Color(.systemGray6), lineWidth: 5)
-                            .frame(width: 64, height: 64)
-                        Circle()
-                            .trim(from: 0, to: progress)
-                            .stroke(Color.bravoBasicPurple, lineWidth: 5)
-                            .frame(width: 64, height: 64)
-                            .rotationEffect(.degrees(-90))
-                            .overlay {
-                                Text("\(Int(progress * 100))%")
-                                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                                    .foregroundColor(.black)
-                                
-                            }
-                    }
-                } else {
-                    VStack(alignment: .leading) {
-                        Text("Ваш день чистый!")
-                            .font(.headline)
-                            .bold()
-                            .padding(.bottom, 3)
-                        Text("Отличный момент, чтобы \nспланировать важное.")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                    }
-                    Spacer()
-                    
-                    Image("emptyDone")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 70, height: 70)
+                VStack(alignment: .leading) {
+                    Text("Выполнено \(numberOfCompletedTasks) из \(numberOfTasksToday)")
+                        .font(.headline)
+                        .bold()
+                        .padding(.bottom, 3)
+                    Text(bravo)
+                        .font(.subheadline)
+                        .foregroundColor(.black)
+                }
+            } else {
+                Image("emptyDone")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50, height: 50)
+                    .padding(.leading, 16)
+                    .padding(.trailing, 10)
+                
+                VStack(alignment: .leading) {
+                    Text("Ваш день чистый!")
+                        .font(.headline)
+                        .bold()
+                        .padding(.bottom, 3)
+                    Text("Отличный момент, чтобы \nспланировать важное.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
-            .padding(EdgeInsets(top: 6, leading: 0, bottom: 10, trailing: 20))
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.white)
-                    .shadow(
-                        color: .black.opacity(0.12),
-                        radius: 12,
-                        x: 0,
-                        y: 6
-                    )
-            )
+            
+            Spacer()
+            
+            ZStack {
+                StarPath()
+                Image(systemName: "star.fill")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 100, height: 95)
+        }
+        .padding(EdgeInsets(top: 6, leading: 0, bottom: 10, trailing: 0))
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white)
+                .shadow(
+                    color: .black.opacity(0.12),
+                    radius: 12,
+                    x: 0,
+                    y: 6
+                )
+        )
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  EmptyDailyTask.swift
+//  EmptyDailyTaskView.swift
 //  BravoTasks
 //
 //  Created by Ирина Соловьева on 04.08.2026.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct EmptyDailyTask: View {
+struct EmptyDailyTaskView: View {
     var body: some View {
         HStack {
             Image("emptyDone")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 60, height: 60)
+                .frame(width: 50, height: 50)
                 .padding(.trailing, 6)
             VStack(alignment: .leading) {
                 Text("Задач пока нет")
@@ -53,5 +53,5 @@ struct EmptyDailyTask: View {
 }
 
 #Preview {
-    EmptyDailyTask()
+    EmptyDailyTaskView()
 }
