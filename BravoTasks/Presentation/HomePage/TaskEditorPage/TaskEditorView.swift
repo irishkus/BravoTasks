@@ -14,6 +14,7 @@ struct TaskEditorView: View {
     
     let onSave: (TaskItem) -> Void
     let onDelete: ((TaskItem) -> Void)?
+    let onClose: () -> Void
     
     @Environment(\.dismiss) private var dismiss
     
@@ -26,11 +27,13 @@ struct TaskEditorView: View {
     init(
             task: Binding<TaskItem>,
             onSave: @escaping (TaskItem) -> Void,
-            onDelete: ((TaskItem) -> Void)? = nil
+            onDelete: ((TaskItem) -> Void)? = nil,
+            onClose: @escaping () -> Void
         ) {
             self._task = task
             self.onSave = onSave
             self.onDelete = onDelete
+            self.onClose = onClose
 
             print("TaskEditorView init")
         }
@@ -39,8 +42,7 @@ struct TaskEditorView: View {
         VStack(alignment: .leading) {
             HStack {
                 Button {
-                    print($task)
-                    dismiss()
+                    onClose()
                 } label: {
                     Image(systemName: "arrow.left")
                         .font(.system(size: 18, weight: .medium))
@@ -127,9 +129,6 @@ struct TaskEditorView: View {
             )
             .presentationDetents([.medium])
         }
-        .onChange(of: showRepetitionOptions) { oldValue, newValue in
-            print("showRepetitionOptions:", oldValue, "→", newValue)
-        }
     }
     
     
@@ -209,6 +208,9 @@ struct TaskEditorView: View {
         },
         onDelete: { deletedTask in
             print("Задача удалена")
+        },
+        onClose: {
+            print("Закрытие экрана")
         }
     )
 }

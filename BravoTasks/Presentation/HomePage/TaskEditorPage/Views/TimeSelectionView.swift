@@ -57,7 +57,16 @@ struct TimeSelectionView: View {
         .padding(.top, 12)
         .sheet(isPresented: $isTimePickerPresented) {
             TimePickerSheet(selectedTime: $selectedDate)
-                .presentationDetents([.height(280)])
+                .presentationDetents([.height(340)])
+        }
+        .onChange(of: isTimePickerPresented) { old, new in
+            print("SHEET: \(old) -> \(new)")
+        }
+        .onAppear {
+            print("TimeSelectionView APPEARED")
+        }
+        .onDisappear {
+            print("TimeSelectionView DISAPPEARED")
         }
     }
 

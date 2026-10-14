@@ -10,6 +10,8 @@ import SwiftUI
 struct DateSelectionView: View {
     @Binding var selectedDate: Date
     @State private var isCalendarPresented = false
+    
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 struct TasksScrollView: View {
 
@@ -87,8 +88,9 @@ private struct TasksContentView: View {
         .task {
             viewModel.loadTasks()
         }
-        .fullScreenCover(
-            isPresented: $viewModel.isEditorPresented
+        .uiFullScreenCover(
+            isPresented: $viewModel.isEditorPresented,
+            publisher: viewModel.$isEditorPresented.eraseToAnyPublisher()
         ) {
             editorView
         }
@@ -107,26 +109,18 @@ private extension TasksContentView {
 
     @ViewBuilder
     var editorView: some View {
-        NavigationStack {
-            if viewModel.isEditingTask {
-                TaskEditorView(
-                    task: $viewModel.selectedTask,
-                    onSave: { _ in
-                        viewModel.saveSelectedTask()
-                    },
-                    onDelete: { _ in
-                        viewModel.deleteSelectedTask()
-                    }
-                )
-            } else {
-                TaskEditorView(
-                    task: $viewModel.selectedTask,
-                    onSave: { _ in
-                        viewModel.saveSelectedTask()
-                    }
-                )
+        TaskEditorView(
+            task: $viewModel.selectedTask,
+            onSave: { _ in
+                viewModel.saveSelectedTask()
+            },
+            onDelete: viewModel.isEditingTask
+                ? { _ in viewModel.deleteSelectedTask() }
+                : nil,
+            onClose: {
+                viewModel.isEditorPresented = false
             }
-        }
+        )
     }
 }
 

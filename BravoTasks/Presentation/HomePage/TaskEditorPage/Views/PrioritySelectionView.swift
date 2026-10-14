@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PrioritySelectionView: View {
     @Binding var selectedPriority: AppTaskPriority
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
