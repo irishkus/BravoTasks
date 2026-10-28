@@ -28,7 +28,8 @@ final class TasksViewModel: ObservableObject {
 
         self.selectedTask = TaskItem(
             title: "",
-            date: .now,
+            scheduledAt: nil,
+            completedAt: nil,
             priority: .medium,
             isCompleted: false,
             isRemind: false,
@@ -43,7 +44,11 @@ final class TasksViewModel: ObservableObject {
     }
 
     var nonDailyTasks: [TaskItem] {
-        tasks.filter { $0.repeatType != .daily }
+        tasks.filter { $0.repeatType != .daily && $0.completedAt != nil }
+    }
+    
+    var overdueTasks: [TaskItem] {
+        tasks.filter { $0.repeatType != .daily && $0.completedAt == nil }
     }
 
     // MARK: - Статистика
@@ -75,7 +80,8 @@ final class TasksViewModel: ObservableObject {
     func createTask(repeatType: RepeatType = .never) {
         selectedTask = TaskItem(
             title: "",
-            date: .now,
+            scheduledAt: nil,
+            completedAt: nil,
             priority: .medium,
             isCompleted: false,
             isRemind: false,

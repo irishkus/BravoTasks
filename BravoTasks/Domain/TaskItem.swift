@@ -13,7 +13,8 @@ struct TaskItem: Identifiable, Equatable {
 
     var title: String
     var description: String
-    var date: Date
+    var scheduledAt: Date?  // На когда запланировано
+    var completedAt: Date?  // Когда выполнено фактически
     var priority: AppTaskPriority
     var isCompleted: Bool
     var isRemind: Bool
@@ -23,7 +24,8 @@ struct TaskItem: Identifiable, Equatable {
         id: UUID = UUID(),
         title: String,
         description: String = "",
-        date: Date,
+        scheduledAt: Date?,
+        completedAt: Date?,
         priority: AppTaskPriority,
         isCompleted: Bool,
         isRemind: Bool,
@@ -32,7 +34,8 @@ struct TaskItem: Identifiable, Equatable {
         self.id = id
         self.title = title
         self.description = description
-        self.date = date
+        self.completedAt = completedAt
+        self.scheduledAt = scheduledAt
         self.priority = priority
         self.isCompleted = isCompleted
         self.isRemind = isRemind

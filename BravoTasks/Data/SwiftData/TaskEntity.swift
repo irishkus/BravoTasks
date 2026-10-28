@@ -16,7 +16,8 @@ final class TaskEntity {
 
     var title: String
     var taskDescription: String
-    var date: Date
+    var scheduledAt: Date?  
+    var completedAt: Date?
 
     var priorityRawValue: String
 
@@ -33,7 +34,8 @@ final class TaskEntity {
         id: UUID,
         title: String,
         taskDescription: String,
-        date: Date,
+        scheduledAt: Date?,
+        completedAt: Date?,
         priorityRawValue: String,
         isCompleted: Bool,
         isRemind: Bool,
@@ -45,7 +47,8 @@ final class TaskEntity {
         self.id = id
         self.title = title
         self.taskDescription = taskDescription
-        self.date = date
+        self.scheduledAt = scheduledAt
+        self.completedAt = completedAt
         self.priorityRawValue = priorityRawValue
         self.isCompleted = isCompleted
         self.isRemind = isRemind

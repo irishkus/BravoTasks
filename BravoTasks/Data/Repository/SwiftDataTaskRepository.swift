@@ -23,7 +23,7 @@ final class SwiftDataTaskRepository: TaskRepositoryProtocol {
         let descriptor = FetchDescriptor<TaskEntity>(
             sortBy: [
                 SortDescriptor(
-                    \TaskEntity.date,
+                    \TaskEntity.scheduledAt,
                     order: .forward
                 ),
                 SortDescriptor(
@@ -53,11 +53,15 @@ final class SwiftDataTaskRepository: TaskRepositoryProtocol {
 
         let descriptor = FetchDescriptor<TaskEntity>(
             predicate: #Predicate<TaskEntity> { entity in
-                entity.date >= startOfDay &&
-                entity.date < endOfDay
+                if let scheduledAt = entity.scheduledAt {
+                    scheduledAt >= startOfDay &&
+                    scheduledAt < endOfDay
+                } else {
+                    false
+                }
             },
             sortBy: [
-                SortDescriptor(\TaskEntity.date)
+                SortDescriptor(\TaskEntity.scheduledAt)
             ]
         )
 

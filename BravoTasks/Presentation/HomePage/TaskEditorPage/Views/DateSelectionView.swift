@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DateSelectionView: View {
-    @Binding var selectedDate: Date
+    @Binding var selectedDate: Date?
     @State private var isCalendarPresented = false
     
     @Environment(\.dismiss) private var dismiss
@@ -27,10 +27,15 @@ struct DateSelectionView: View {
                         .font(.system(size: 25, weight: .medium))
                         .foregroundStyle(Color.bravoBasicPurple)
 
-                    Text(formattedDate)
-                        .font(.subheadline)
-                        .foregroundStyle(.primary)
-
+                    if let formattedDate = formattedDate {
+                        Text(formattedDate)
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                    } else {
+                        Text("Выбрать дату")
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                    }
                     Spacer()
 
                     Image(systemName: "chevron.right")
@@ -66,30 +71,39 @@ struct DateSelectionView: View {
         }
     }
 
-    private var formattedDate: String {
+    private var formattedDate: String? {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "d MMMM, EEEE"
-
+        
+        guard let selectedDate = selectedDate else { return nil }
         return formatter.string(from: selectedDate)
     }
 }
 
 struct CalendarView: View {
-    @Binding var selectedDate: Date
+    @Binding var selectedDate: Date?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         DatePicker(
             "Выберите дату",
-            selection: $selectedDate,
+            selection: Binding(
+                get: { selectedDate ?? Date() },
+                set: { newDate in
+                    selectedDate = newDate
+                    dismiss()
+                }
+            ),
             displayedComponents: .date
         )
         .datePickerStyle(.graphical)
         .environment(\.locale, Locale(identifier: "ru_RU"))
         .padding()
-        .onChange(of: selectedDate) { _, _ in
+        
+        Button("Готово") {
             dismiss()
         }
+        .buttonStyle(.borderedProminent)
     }
 }

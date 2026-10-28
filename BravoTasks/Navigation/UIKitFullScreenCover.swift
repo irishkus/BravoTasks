@@ -44,7 +44,7 @@ struct UIKitFullScreenCover<Content: View>: UIViewControllerRepresentable {
         context.coordinator.binding = $isPresented
         context.coordinator.onDismiss = onDismiss
 
-        presenter.makeContent = content
+        presenter.updateContent(content)
         presenter.setPresented(isPresented)
     }
 
@@ -188,6 +188,14 @@ struct UIKitFullScreenCover<Content: View>: UIViewControllerRepresentable {
             hostingController = nil
             makeContent = nil
             phase = .idle
+        }
+        
+        func updateContent(_ content: @escaping () -> Content) {
+            makeContent = content
+
+            if let hostingController {
+                hostingController.rootView = content()
+            }
         }
     }
 }

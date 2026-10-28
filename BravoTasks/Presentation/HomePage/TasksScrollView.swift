@@ -29,6 +29,7 @@ private struct TasksContentView: View {
 
     private let today = "На сегодня"
     private let daily = "Ежедневно"
+    private let overdue = "С прошлых дней"
 
     init(repository: TaskRepositoryProtocol) {
         _viewModel = StateObject(
@@ -58,6 +59,16 @@ private struct TasksContentView: View {
 
                 tasksSection(
                     tasks: viewModel.nonDailyTasks
+                )
+                
+                sectionHeader(
+                    title: overdue,
+                    count: viewModel.overdueTasks.count
+                )
+                .padding(.top, 12)
+                
+                tasksSection(
+                    tasks: viewModel.overdueTasks
                 )
 
                 sectionHeader(
@@ -92,7 +103,7 @@ private struct TasksContentView: View {
             isPresented: $viewModel.isEditorPresented,
             publisher: viewModel.$isEditorPresented.eraseToAnyPublisher()
         ) {
-            editorView
+            TaskEditorHost(viewModel: viewModel)
         }
         .alert(
             "Ошибка",
@@ -102,25 +113,6 @@ private struct TasksContentView: View {
         } message: {
             Text(viewModel.errorMessage ?? "")
         }
-    }
-}
-
-private extension TasksContentView {
-
-    @ViewBuilder
-    var editorView: some View {
-        TaskEditorView(
-            task: $viewModel.selectedTask,
-            onSave: { _ in
-                viewModel.saveSelectedTask()
-            },
-            onDelete: viewModel.isEditingTask
-                ? { _ in viewModel.deleteSelectedTask() }
-                : nil,
-            onClose: {
-                viewModel.isEditorPresented = false
-            }
-        )
     }
 }
 
@@ -250,15 +242,17 @@ private extension TasksContentView {
                     .bold()
                     .padding(.vertical, 2)
 
-                Text(
-                    DateFormatterHelper.time(
-                        from: task.date
+                if let scheduledAt = task.scheduledAt {
+                    Text(
+                        DateFormatterHelper.time(
+                            from: scheduledAt
+                        )
                     )
-                )
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .bold()
-                .padding(.bottom, 2)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .bold()
+                    .padding(.bottom, 2)
+                }
             }
 
             Spacer()
@@ -317,6 +311,25 @@ private extension TasksContentView {
                 if !isPresented {
                     viewModel.errorMessage = nil
                 }
+            }
+        )
+    }
+}
+
+private struct TaskEditorHost: View {
+    @ObservedObject var viewModel: TasksViewModel
+
+    var body: some View {
+        TaskEditorView(
+            task: $viewModel.selectedTask,
+            onSave: { _ in
+                viewModel.saveSelectedTask()
+            },
+            onDelete: viewModel.isEditingTask
+                ? { _ in viewModel.deleteSelectedTask() }
+                : nil,
+            onClose: {
+                viewModel.isEditorPresented = false
             }
         )
     }

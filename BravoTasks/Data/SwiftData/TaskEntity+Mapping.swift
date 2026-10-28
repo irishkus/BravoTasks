@@ -29,7 +29,8 @@ extension TaskEntity {
             id: task.id,
             title: task.title,
             taskDescription: task.description,
-            date: task.date,
+            scheduledAt: task.scheduledAt,
+            completedAt: task.completedAt,
             priorityRawValue: task.priority.rawValue,
             isCompleted: task.isCompleted,
             isRemind: task.isRemind,
@@ -43,7 +44,8 @@ extension TaskEntity {
 
         title = task.title
         taskDescription = task.description
-        date = task.date
+        scheduledAt = task.scheduledAt
+        completedAt = task.completedAt
         priorityRawValue = task.priority.rawValue
         isCompleted = task.isCompleted
         repeatTypeRawValue = repeatData.type
@@ -61,7 +63,8 @@ extension TaskEntity {
             id: id,
             title: title,
             description: taskDescription,
-            date: date,
+            scheduledAt: scheduledAt,
+            completedAt: completedAt,
             priority: AppTaskPriority(
                 rawValue: priorityRawValue
             ) ?? .medium,

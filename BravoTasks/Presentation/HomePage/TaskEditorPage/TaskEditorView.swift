@@ -90,9 +90,9 @@ struct TaskEditorView: View {
                         .stroke(Color.gray.opacity(0.6), lineWidth: 1)
                 }
             
-            DateSelectionView(selectedDate: $task.date)
+            DateSelectionView(selectedDate: $task.scheduledAt)
             
-            TimeSelectionView(selectedDate: $task.date)
+            TimeSelectionView(selectedDate: $task.scheduledAt)
             
             PrioritySelectionView(selectedPriority: $task.priority)
             
@@ -194,7 +194,8 @@ struct TaskEditorView: View {
 #Preview {
     @Previewable @State var task = TaskItem(
         title: "",
-        date: Date(),
+        scheduledAt: nil,
+        completedAt: nil,
         priority: .medium,
         isCompleted: false,
         isRemind: false,

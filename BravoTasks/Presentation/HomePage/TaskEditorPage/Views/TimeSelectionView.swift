@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TimeSelectionView: View {
-    @Binding var selectedDate: Date
+    @Binding var selectedDate: Date?
     @State private var isTimePickerPresented = false
 
     var body: some View {
@@ -25,10 +25,15 @@ struct TimeSelectionView: View {
                         .font(.system(size: 25, weight: .medium))
                         .foregroundStyle(Color.bravoBasicPurple)
 
-                    Text(formattedTime)
-                        .font(.subheadline)
-                        .foregroundStyle(.primary)
-
+                    if let formattedTime = formattedTime {
+                        Text(formattedTime)
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                    } else {
+                        Text("Выбрать время")
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                    }
                     Spacer()
 
                     Image(systemName: "chevron.right")
@@ -70,8 +75,9 @@ struct TimeSelectionView: View {
         }
     }
 
-    private var formattedTime: String {
-        selectedDate.formatted(
+    private var formattedTime: String? {
+        guard let selectedDate = selectedDate else { return nil }
+        return selectedDate.formatted(
             .dateTime
                 .hour(.twoDigits(amPM: .omitted))
                 .minute(.twoDigits)
@@ -81,7 +87,7 @@ struct TimeSelectionView: View {
 }
 
 struct TimePickerSheet: View {
-    @Binding var selectedTime: Date
+    @Binding var selectedTime: Date?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -91,7 +97,10 @@ struct TimePickerSheet: View {
 
             DatePicker(
                 "",
-                selection: $selectedTime,
+                selection: Binding<Date>(
+                    get: { selectedTime ?? Date() },
+                    set: { selectedTime = $0 }
+                ),
                 displayedComponents: .hourAndMinute
             )
             .datePickerStyle(.wheel)
